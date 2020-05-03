@@ -1,11 +1,17 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, request, make_response, jsonify
 
+import config
 from models import db, Student, ScoreUpdate, StudyArea
-from repositories import StudentRepository
+from repositories import StudentRepository, StudyAreaRepository, ScoreUpdateRepository
+from services import ScoreUpdateCoordinator
 
+scheduler = BackgroundScheduler()
+scheduler.add_job(ScoreUpdateCoordinator.run, config.SCHEDULER_TRIGGER, seconds=30)
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://simchope:simchope@localhost:5432/simchope"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = config.DB_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config.SQLALCHEMY_TRACK_MODIFICATIONS
+scheduler.start()
 db.init_app(app)
 db.app = app
 
@@ -15,7 +21,7 @@ def api_base():
     return 'API Base Reached!'
 
 
-# @app.route('/student', methods=['GET'])
+# @app.route('/students', methods=['GET'])
 # def get_current_user(simconnect_id):
 #     student = StudentRepository.get_student(simconnect_id)
 #     return jsonify({
@@ -24,7 +30,7 @@ def api_base():
 #     })
 
 
-@app.route('/student', methods=['GET'])
+@app.route('/students', methods=['GET'])
 def show_users():
     data = Student.query.order_by(Student.simconnect_id).all()
     result = \
@@ -55,17 +61,13 @@ def create_user():
     return make_response(f"{new_student} successfully created")
 
 
-@app.route('/study-area', methods=['GET', 'POST'])
+@app.route('/study-areas', methods=['GET', 'POST'])
 def handle_locations():
     if request.method == "GET":
-        locations = StudyArea.query.all()
-        result = \
-            [
-                {
-                    "area_name": location.area_name,
-                    "score": location.score
-                } for location in locations
-            ]
+        if 'block' in request.args:
+            result = [sa.json for sa in StudyAreaRepository.get_by_block(request.args.get('block'))]
+        else:
+            result = [sa.json for sa in StudyAreaRepository.get_all()]
         return jsonify(result)
 
     if request.method == 'POST':
@@ -86,31 +88,25 @@ def handle_locations():
         return make_response(f"{new_study_area} successfully created")
 
 
-# end point to get a score point for a given area
-@app.route('/score', methods=['GET'])
+@app.route('/study-areas/<id>', methods=['GET'])
+def get_study_area(id):
+    return jsonify(StudyAreaRepository.get_by_id(id).json)
+
+
+# TODO: Remove after testing
+@app.route('/scores', methods=['GET'])
 def get_scores():
-    area = request.args.get('study_area')
-    result = ScoreUpdate.query.filter_by(study_area=area).first()
-    if result is not None:
-        return jsonify({
-            "area_name": result.study_area,
-            "score": result.score
-        })
-    return make_response(f"{area} not found")
+    return jsonify([su.json for su in ScoreUpdateRepository.get_scores()])
 
 
 # end-point to create score updates, to be polled by scheduler later
 @app.route('/score/update', methods=['POST'])
 def create_score():
     data = request.json
-    new_score = ScoreUpdate(
-        student=data['student'],
-        study_area=data['study_area'],
-        score=data['score']
+    score = ScoreUpdateRepository.create(
+        data['study_area'], data['score'], data['student']
     )
-    db.session.add(new_score)
-    db.session.commit()
-    return make_response("Update Created")
+    return jsonify(score.json)
 
 
 if __name__ == '__main__':
