@@ -43,7 +43,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('student', sa.String(), nullable=False),
     sa.Column('study_area', sa.Integer(), nullable=False),
-    sa.Column('score', sa.Numeric(), nullable=False),
+    sa.Column('score', sa.String(), nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['student'], ['student.simconnect_id'], ),
     sa.ForeignKeyConstraint(['study_area'], ['study_area.id'], ),
