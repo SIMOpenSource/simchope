@@ -30,9 +30,11 @@ class ScoreEngine:
     @staticmethod
     def calculate_and_update_scores(score_updates):
         get_attr = operator.attrgetter('study_area')
-        grouped_list = [{'study_area': k, 'scores': list(g)} for k, g in itertools.groupby(sorted(score_updates, key=get_attr), get_attr)]
+        grouped_list = [{'study_area': k, 'scores': list(map(lambda x: x.score, g))} for k, g in
+                        itertools.groupby(sorted(score_updates, key=get_attr), get_attr)]
         for g in grouped_list:
-            current_id, current_scores = g['study_area'], g['scores']
+            current_id, current_scores, total_count = g['study_area'], g['scores'], len(g['scores'])
+            grouped_scores = [{'score': k, 'count': list(g).count(k)} for k, g in itertools.groupby(current_scores)]
             score_mean = mean(map(lambda x: x.score, current_scores))
             print(f"Score mean for {current_id}: {score_mean}")
             current_score = StudyAreaRepository.get_by_id(current_id).score

@@ -1,17 +1,19 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, request, make_response, jsonify
+from flask_cors import CORS
 
 import config
-from models import db, Student, ScoreUpdate, StudyArea
-from repositories import StudentRepository, StudyAreaRepository, ScoreUpdateRepository
-from services import ScoreUpdateCoordinator
+from src.models import db, Student, ScoreUpdate, StudyArea
+from src.repositories import StudentRepository, StudyAreaRepository, ScoreUpdateRepository
+from src.services import ScoreUpdateCoordinator
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(ScoreUpdateCoordinator.run, config.SCHEDULER_TRIGGER, seconds=30)
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = config.DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config.SQLALCHEMY_TRACK_MODIFICATIONS
-scheduler.start()
+# scheduler.start()
 db.init_app(app)
 db.app = app
 
@@ -79,7 +81,7 @@ def handle_locations():
             area_name=data['area_name'],
             block=data['block'],
             level=data['level'],
-            score=data['score'],
+            scores=data['scores'],
             table_count=data['table_count'],
             capacity=data['capacity']
         )
