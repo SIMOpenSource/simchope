@@ -12,11 +12,11 @@ class ScoreUpdate(db.Model, BaseModel, metaclass=MetaBaseModel):
     id = db.Column(db.Integer, primary_key=True)
     student = db.Column(db.String(), db.ForeignKey('student.simconnect_id'), nullable=False)
     study_area = db.Column(db.Integer, db.ForeignKey('study_area.id'), nullable=False)
-    score = db.Column(db.String(), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, student, study_area, scores):
+    def __init__(self, student, study_area, score):
         self.student = student
         self.study_area = study_area
-        self.scores = scores
+        self.score = score
         self.timestamp = datetime.utcnow()

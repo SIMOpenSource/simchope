@@ -1,8 +1,6 @@
 from datetime import datetime
 from enum import Enum
 
-from sqlalchemy import inspect
-
 from . import db
 from .abc import BaseModel, MetaBaseModel
 
@@ -20,6 +18,7 @@ class StudyArea(db.Model, BaseModel, metaclass=MetaBaseModel):
     table_count = db.Column(db.Integer, nullable=True)
     capacity = db.Column(db.Integer, nullable=True)
     _facilities = db.Column(db.String(), nullable=True)
+    description = db.Column(db.String(), nullable=True)
     last_updated = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, area_name, block, level, scores, table_count, capacity, facilities):
@@ -38,7 +37,7 @@ class StudyArea(db.Model, BaseModel, metaclass=MetaBaseModel):
 
     @scores.setter
     def scores(self, scores):
-        self._scores = ";".join(scores)
+        self._scores = ";".join(map(str, scores))
 
     @property
     def facilities(self):
@@ -56,7 +55,7 @@ class StudyArea(db.Model, BaseModel, metaclass=MetaBaseModel):
         return {
             column: value
             if not isinstance(value, datetime)
-            else value.strftime("%Y-%m-%d")
+            else value.strftime("%Y-%m-%d %H:%M:%S")
             for column, value in attr_dict.items()
             if column not in self.to_json_filter
             if column not in ["_facilities", "_scores"]

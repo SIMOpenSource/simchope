@@ -19,5 +19,5 @@ class StudyAreaRepository:
 
     def update_score(self, id, new_score):
         study_area = self.get_by_id(id)
-        study_area.score = new_score
+        study_area.scores = new_score
         return study_area.save()
