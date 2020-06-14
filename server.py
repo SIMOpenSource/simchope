@@ -3,10 +3,10 @@ from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from flask_restful import Api
 
-import config
-from models import db, Student, ScoreUpdate, StudyArea
-from resources.routes import initialize_routes
-from services import ScoreUpdateCoordinator
+from src import config
+from src.models import db, Student, ScoreUpdate, StudyArea
+from src.resources.routes import initialize_routes
+from src.services import ScoreUpdateCoordinator
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(ScoreUpdateCoordinator.run, config.SCHEDULER_TRIGGER, seconds=30)
