@@ -18,7 +18,7 @@ api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = config.DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config.SQLALCHEMY_TRACK_MODIFICATIONS
 
-scheduler.start()
+# scheduler.start()
 
 db.init_app(app)
 db.app = app
