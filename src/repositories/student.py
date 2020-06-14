@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from models import Student
+from src.models import Student
 
 
 class StudentRepository:

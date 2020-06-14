@@ -2,7 +2,7 @@ from flask import jsonify, make_response, request
 from flask_restful import Resource
 from sqlalchemy.exc import NoReferencedColumnError
 
-from repositories import ScoreUpdateRepository
+from src.repositories import ScoreUpdateRepository
 
 
 class ScoreUpdateResource(Resource):

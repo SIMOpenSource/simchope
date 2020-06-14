@@ -1,4 +1,4 @@
-from models import ScoreUpdate
+from src.models import ScoreUpdate
 
 
 class ScoreUpdateRepository:

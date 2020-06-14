@@ -1,7 +1,7 @@
 import itertools
 import operator
 
-from repositories import StudyAreaRepository, ScoreUpdateRepository
+from src.repositories import StudyAreaRepository, ScoreUpdateRepository
 
 
 class ScoreEngine:

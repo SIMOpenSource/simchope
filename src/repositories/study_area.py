@@ -1,4 +1,4 @@
-from models import StudyArea
+from src.models import StudyArea
 
 
 class StudyAreaRepository:

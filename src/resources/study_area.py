@@ -1,7 +1,7 @@
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 
-from repositories import StudyAreaRepository
+from src.repositories import StudyAreaRepository
 
 
 class StudyAreasResource(Resource):
