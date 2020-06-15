@@ -1,4 +1,6 @@
-from models import StudyArea
+from datetime import datetime
+
+from src.models import StudyArea
 
 
 class StudyAreaRepository:
@@ -20,4 +22,5 @@ class StudyAreaRepository:
     def update_score(self, id, new_score):
         study_area = self.get_by_id(id)
         study_area.scores = new_score
+        study_area.last_updated = datetime.now()
         return study_area.save()
