@@ -1,4 +1,5 @@
 from src.models import ScoreUpdate
+from datetime import datetime
 
 
 class ScoreUpdateRepository:
@@ -14,4 +15,5 @@ class ScoreUpdateRepository:
     @staticmethod
     def create(study_area, score, student):
         score = ScoreUpdate(student, study_area, score)
+        score.timestamp = datetime.now()
         return score.save()
