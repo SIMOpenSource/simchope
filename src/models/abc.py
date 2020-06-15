@@ -14,16 +14,16 @@ class MetaBaseModel(db.Model.__class__):
     """ Define a metaclass for the BaseModel
         Implement `__getitem__` for managing aliases """
 
-    def __init__(cls, *args):
+    def __init__(self, *args):
         super().__init__(*args)
-        cls.aliases = WeakValueDictionary()
+        self.aliases = WeakValueDictionary()
 
-    def __getitem__(cls, key):
+    def __getitem__(self, key):
         try:
-            alias = cls.aliases[key]
+            alias = self.aliases[key]
         except KeyError:
-            alias = aliased(cls)
-            cls.aliases[key] = alias
+            alias = aliased(self)
+            self.aliases[key] = alias
         return alias
 
 

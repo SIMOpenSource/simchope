@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from models import Student
+from src.models import Student
 
 
 class StudentRepository:
@@ -21,3 +21,14 @@ class StudentRepository:
     def get_student(simconnect_id):
         student = Student.query.filter_by(simconnect_id=simconnect_id).one()
         return student
+
+    @staticmethod
+    def find_if_existing(simconnect_id):
+        return Student.query.filter_by(simconnect_id=simconnect_id).first()
+
+    @staticmethod
+    def create(simconnect_id):
+        email = str(simconnect_id) + '@mymail.sim.edu.sg'
+        password = simconnect_id
+        student = Student(simconnect_id, email, password)
+        return student.save()
