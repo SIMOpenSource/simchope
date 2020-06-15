@@ -18,10 +18,8 @@ DB_URI = os.getenv("DATABASE_URL", "postgresql://%(user)s:%(pw)s@%(host)s:%(port
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 SCHEDULER_TRIGGER = os.getenv("SCHEDULER_TRIGGER", "interval")
-SCHEDULER_INTERVAL = {
-    "seconds"
-}
 
+# Uncomment to dump the logs to the server.log file
 # logging.basicConfig(
 #     filename=os.getenv("SERVICE_LOG", "server.log"),
 #     level=logging.DEBUG,
