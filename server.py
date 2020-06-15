@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_restful import Api
 
 from src import config
-from src.models import db, Student, ScoreUpdate, StudyArea
+from src.models import db, Student
 from src.resources.routes import initialize_routes
 from src.services import ScoreUpdateCoordinator
 

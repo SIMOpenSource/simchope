@@ -34,8 +34,10 @@ class ScoreEngine:
             current_id, current_scores, total_count = g['study_area'], g['scores'], len(g['scores'])
             grouped_scores = self._convert_group('score', 'percent', current_scores,
                                                  lambda x, y: (list(x).count(y) / total_count) * 100.0, False)
-            score_list = list(map(lambda x: x['percent'], grouped_scores))
-            score_list.extend([0 for i in range(0, 4 - len(grouped_scores))])
+            score_list = [0 for i in range(0, 4)]
+            for x in grouped_scores:
+                score_list[x['score']] = x['percent']
+
             updated = StudyAreaRepository().update_score(current_id, score_list)
             print(f"Updated study area: {updated.json}")
 

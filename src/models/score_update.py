@@ -19,4 +19,4 @@ class ScoreUpdate(db.Model, BaseModel, metaclass=MetaBaseModel):
         self.student = student
         self.study_area = study_area
         self.score = score
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now()

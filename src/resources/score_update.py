@@ -3,6 +3,7 @@ from flask_restful import Resource
 from sqlalchemy.exc import NoReferencedColumnError
 
 from src.repositories import ScoreUpdateRepository
+from src.services import ScoreUpdateCoordinator
 
 
 class ScoreUpdateResource(Resource):
@@ -18,4 +19,5 @@ class ScoreUpdateResource(Resource):
             )
         except NoReferencedColumnError:
             return make_response("Error while updating with this user", 500)
+        ScoreUpdateCoordinator.run()
         return make_response(score.json, 200)
